@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shashwat Pandey | AI/ML Engineer Portfolio
 
-## Getting Started
+A cutting-edge, 3D-enhanced web portfolio designed for an AI/ML Engineer. This project features a "Neural Network" aesthetic with interactive particle systems, floating vector logos, and smooth glassmorphism UI.
 
-First, run the development server:
+![Portfolio Preview](/src/app/icon.svg) *Note: Run the app to see the live 3D background.*
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🌌 Immersive 3D Background
+-   **Neural Network Cloud**: A rotating system of interconnected nodes representing a deep learning model.
+-   **Infinite Resolution Logos**: Technology stack icons (Python, TensorFlow, React, etc.) rendered as **3D Vector SVGs**. They remain razor-sharp at any zoom level.
+-   **Interactive Particles**: Background elements respond to mouse movement and camera rotation.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 💼 Portfolio Sections
+-   **Experience Timeline**: Vertical glassmorphism timeline displaying work history at **BiltzenTech**, **Red Panda Games**, and **Streamly**.
+-   **Project Grid**: Interactive cards showcasing key AI projects like **Recipe Generator**, **Dialogue Generator**, and **Fraud Detection**.
+-   **Skills Matrix**: Categorized display of technical skills (Languages, Frameworks, Tools).
+-   **Contact**: Direct email integration and social links.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+-   **Framework**: [Next.js 14+](https://nextjs.org/) (App Router)
+-   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+-   **3D Rendering**: [React Three Fiber](https://r3f.docs.pmnd.rs/) & [Drei](https://github.com/pmndrs/drei)
+-   **Animations**: [Framer Motion](https://www.framer.com/motion/)
+-   **Icons**: [Simple Icons](https://simpleicons.org/) (CDN)
 
-To learn more about Next.js, take a look at the following resources:
+## 🏃‍♂️ Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/portfolio.git
+    cd portfolio/web
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-## Deploy on Vercel
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4.  **Open locally:**
+    Navigate to [http://localhost:3000](http://localhost:3000)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎨 Design Philosophy
+
+The design is centered around **"Neural/Deep Learning"**:
+-   **Dark Mode**: Deep space/void background.
+-   **Neon Accents**: Cyan (#00f0ff) and Purple (#7000ff) highlights.
+-   **Connectivity**: Lines connecting floating nodes symbolize neural weights and connections.
+
+## ⚠️ Notes
+
+-   **SVGs in 3D**: We use the `Svg` component from `@react-three/drei` to render icons as actual geometry rather than textures. This ensures zero pixelation.
+-   **Optimization**: Each 3D node is wrapped in a `Suspense` boundary to handle concurrent loading of 50+ vector assets without stalling the main thread.
+
+---
+Built by [Shashwat Pandey](https://github.com/NeuralNomad081)
