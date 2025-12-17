@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: #000212;
+  --color-foreground: #e0e6ed;
+  --color-primary: #00f0ff;
+  --color-secondary: #7000ff;
+  --color-accent: #232d3f;
+}
+
+/* Custom Utilities that might not be covered by standard utilities */
+@utility text-glow {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+/* Global Styles */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* These are already mapped to theme colors above, but defining for raw usage if needed */
+  --background: #000212;
+  --foreground: #e0e6ed;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  color: var(--color-foreground);
+  background: var(--color-background);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
