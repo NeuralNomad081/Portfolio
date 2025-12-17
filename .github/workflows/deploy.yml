@@ -27,9 +27,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./web # Make sure this matches your Next.js app directory
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,7 +36,7 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: ./web/package-lock.json
+          cache-dependency-path: ./package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -59,7 +56,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./web/out
+          path: ./out
 
       - name: Deploy to GitHub Pages
         id: deployment
