@@ -8,7 +8,7 @@ export default function Contact() {
             <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                className="text-4xl font-bold mb-8 text-glow text-primary"
+                className="text-5xl md:text-6xl font-bold mb-8 text-glow text-primary animate-glitch font-[family-name:var(--font-vt323)] tracking-wider"
             >
                 Get In Touch
             </motion.h2>
@@ -63,7 +63,7 @@ export default function Contact() {
                 transition={{ delay: 0.2 }}
                 className="mt-16 p-8 glass-card rounded-2xl max-w-2xl mx-auto"
             >
-                <h3 className="text-2xl font-bold mb-4">Send a direct message</h3>
+                <h3 className="text-3xl font-bold mb-4 font-[family-name:var(--font-vt323)] tracking-wide text-primary">Send a direct message</h3>
                 <form
                     action="mailto:shashwatp011@gmail.com"
                     method="post"
@@ -75,10 +75,24 @@ export default function Contact() {
                         <input type="email" placeholder="Email" className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white" />
                     </div>
                     <textarea placeholder="Message" rows={4} className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white"></textarea>
-                    <button type="submit" className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2">
+                    <button type="submit" className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2 font-[family-name:var(--font-vt323)] text-xl tracking-wider">
                         <Send size={18} /> Send Message
                     </button>
                 </form>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                className="mt-12 flex justify-center"
+            >
+                <div className="w-64 h-auto rounded-lg overflow-hidden border border-secondary/30 shadow-[0_0_15px_rgba(112,0,255,0.2)]">
+                    <img
+                        src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dGphdGJscm1sZWVha2R0dWVrazFtazN2eG1idmxmMm5venkyZ2hsYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MT5UUV1d4CXE2A37Dg/giphy.gif"
+                        alt="Signing Off"
+                        className="w-full h-full object-cover"
+                    />
+                </div>
             </motion.div>
 
             <footer className="mt-20 text-gray-600 text-sm">

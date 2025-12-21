@@ -12,10 +12,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+import { VT323 } from "next/font/google";
+const vt323 = VT323({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-vt323",
+});
+
 export const metadata: Metadata = {
   title: "Shashwat Pandey | AI/ML Engineer",
   description: "Portfolio of Shashwat Pandey - AI/ML Engineer and Data Scientist specializing in Deep Learning and LLMs.",
 };
+
+import Chatbot from "@/components/Chatbot";
 
 export default function RootLayout({
   children,
@@ -25,9 +34,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${vt323.variable} antialiased`}
       >
         {children}
+        <Chatbot />
       </body>
     </html>
   );

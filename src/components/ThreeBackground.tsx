@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useMemo, Component, ReactNode, Suspense } from "react";
+import { useRef, useMemo, useState, useEffect, Component, ReactNode, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Float, Billboard, Svg, Line } from "@react-three/drei";
 import * as THREE from "three";
@@ -17,7 +17,7 @@ const baseLogos = [
     "https://cdn.simpleicons.org/fastapi/009688",
     "https://cdn.simpleicons.org/flask/ffffff",
     "https://cdn.simpleicons.org/git/F05032",
-    "https://cdn.simpleicons.org/java/007396",
+    "https://cdn.simpleicons.org/openjdk/007396",
     "https://cdn.simpleicons.org/c/A8B9CC",
     "https://cdn.simpleicons.org/cpp/00599C",
     "https://cdn.simpleicons.org/javascript/F7DF1E",
@@ -63,19 +63,35 @@ function LogoNode({ url, position }: { url: string; position: [number, number, n
     );
 }
 
+const seededRandom = (s: number) => {
+    const mask = 0xffffffff;
+    let m_w = (123456789 + s) & mask;
+    let m_z = (987654321 - s) & mask;
+    return () => {
+        m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
+        m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
+        let result = ((m_z << 16) + (m_w & 65535)) >>> 0;
+        result /= 4294967296;
+        return result;
+    };
+};
+
 function ParticleField(props: any) {
     const ref = useRef<any>(null);
-    // Generate particles in a sphere manually to avoid maath NaN issues
-    const sphere = useMemo(() => {
-        const count = 1500; // Decreased particle count
+    const [sphere, setSphere] = useState<Float32Array | null>(null);
+
+    useEffect(() => {
+        const count = 1500;
         const temp = new Float32Array(count * 3);
+        const random = seededRandom(12345); // Consistent seed
         const radius = 2.0;
+
         for (let i = 0; i < count; i++) {
-            const u = Math.random();
-            const v = Math.random();
+            const u = random();
+            const v = random();
             const theta = 2 * Math.PI * u;
             const phi = Math.acos(2 * v - 1);
-            const r = radius * Math.cbrt(Math.random());
+            const r = radius * Math.cbrt(random());
             const x = r * Math.sin(phi) * Math.cos(theta);
             const y = r * Math.sin(phi) * Math.sin(theta);
             const z = r * Math.cos(phi);
@@ -83,7 +99,7 @@ function ParticleField(props: any) {
             temp[i * 3 + 1] = y;
             temp[i * 3 + 2] = z;
         }
-        return temp;
+        setSphere(temp);
     }, []);
 
     useFrame((state, delta) => {
@@ -92,6 +108,8 @@ function ParticleField(props: any) {
             ref.current.rotation.y -= delta / 20;
         }
     });
+
+    if (!sphere) return null;
 
     return (
         <group rotation={[0, 0, Math.PI / 4]}>
@@ -111,38 +129,35 @@ function ParticleField(props: any) {
 
 function NeuralNetworkCloud() {
     const groupRef = useRef<any>(null);
+    const [networkData, setNetworkData] = useState<{ positions: THREE.Vector3[], connections: THREE.Vector3[][] } | null>(null);
 
-    // Generate static positions for logos
-    const { positions, content } = useMemo(() => {
+    useEffect(() => {
+        const random = seededRandom(67890);
         const pos = logos.map(() => {
-            const u = Math.random();
-            const v = Math.random();
+            const u = random();
+            const v = random();
             const theta = 2 * Math.PI * u;
             const phi = Math.acos(2 * v - 1);
-            const r = 2.5 + Math.random(); // Larger radius
+            const r = 2.5 + random();
             const x = r * Math.sin(phi) * Math.cos(theta);
             const y = r * Math.sin(phi) * Math.sin(theta);
             const z = r * Math.cos(phi);
             return new THREE.Vector3(x, y, z);
         });
-        return { positions: pos, content: logos };
-    }, []);
 
-    // Generate connections
-    const connections = useMemo(() => {
-        const lines: any[] = [];
-        positions.forEach((p1, i) => {
-            positions.forEach((p2, j) => {
+        const lines: THREE.Vector3[][] = [];
+        pos.forEach((p1, i) => {
+            pos.forEach((p2, j) => {
                 if (i !== j) {
                     const dist = p1.distanceTo(p2);
-                    if (dist < 1.2) { // Connection threshold
+                    if (dist < 1.2) {
                         lines.push([p1, p2]);
                     }
                 }
             });
         });
-        return lines;
-    }, [positions]);
+        setNetworkData({ positions: pos, connections: lines });
+    }, []);
 
     useFrame((state, delta) => {
         if (groupRef.current) {
@@ -150,19 +165,19 @@ function NeuralNetworkCloud() {
         }
     });
 
+    if (!networkData) return null;
+
     return (
         <group ref={groupRef} rotation={[0, 0, Math.PI / 4]}>
-            {/* Render Nodes */}
-            {content.map((url, i) => (
+            {networkData.positions.map((p, i) => (
                 <LogoErrorBoundary key={i}>
                     <Suspense fallback={null}>
-                        <LogoNode url={url} position={[positions[i].x, positions[i].y, positions[i].z]} />
+                        <LogoNode url={logos[i]} position={[p.x, p.y, p.z]} />
                     </Suspense>
                 </LogoErrorBoundary>
             ))}
 
-            {/* Render Lines */}
-            {connections.map((pair, i) => (
+            {networkData.connections.map((pair, i) => (
                 <Line
                     key={i}
                     points={pair}
