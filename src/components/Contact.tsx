@@ -1,4 +1,5 @@
 "use client";
+import React from 'react';
 import { motion } from "framer-motion";
 import { Mail, Linkedin, Github, Send } from "lucide-react";
 
@@ -64,21 +65,7 @@ export default function Contact() {
                 className="mt-16 p-8 glass-card rounded-2xl max-w-2xl mx-auto"
             >
                 <h3 className="text-3xl font-bold mb-4 font-[family-name:var(--font-vt323)] tracking-wide text-primary">Send a direct message</h3>
-                <form
-                    action="mailto:shashwatp011@gmail.com"
-                    method="post"
-                    encType="text/plain"
-                    className="space-y-4"
-                >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" placeholder="Name" className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white" />
-                        <input type="email" placeholder="Email" className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white" />
-                    </div>
-                    <textarea placeholder="Message" rows={4} className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white"></textarea>
-                    <button type="submit" className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2 font-[family-name:var(--font-vt323)] text-xl tracking-wider">
-                        <Send size={18} /> Send Message
-                    </button>
-                </form>
+                <ContactForm />
             </motion.div>
 
             <motion.div
@@ -99,5 +86,95 @@ export default function Contact() {
                 © {new Date().getFullYear()} Shashwat Pandey. All rights reserved.
             </footer>
         </section>
+    );
+}
+
+function ContactForm() {
+    const [status, setStatus] = React.useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = React.useState('');
+
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setStatus('loading');
+        setErrorMessage('');
+
+        const formData = new FormData(event.currentTarget);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            message: formData.get('message'),
+        };
+
+        try {
+            const response = await fetch('/api/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to send message');
+            }
+
+            setStatus('success');
+            (event.target as HTMLFormElement).reset();
+        } catch (error) {
+            console.error(error);
+            setStatus('error');
+            setErrorMessage(error instanceof Error ? error.message : 'Something went wrong');
+        }
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                    name="name"
+                    required
+                    type="text"
+                    placeholder="Name"
+                    disabled={status === 'loading'}
+                    className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white disabled:opacity-50"
+                />
+                <input
+                    name="email"
+                    required
+                    type="email"
+                    placeholder="Email"
+                    disabled={status === 'loading'}
+                    className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white disabled:opacity-50"
+                />
+            </div>
+            <textarea
+                name="message"
+                required
+                placeholder="Message"
+                rows={4}
+                disabled={status === 'loading'}
+                className="w-full bg-accent/30 border border-gray-700 rounded-lg p-3 focus:border-primary focus:outline-none text-white disabled:opacity-50"
+            ></textarea>
+
+            {status === 'error' && (
+                <p className="text-red-400 text-sm">{errorMessage}</p>
+            )}
+
+            {status === 'success' && (
+                <p className="text-green-400 text-sm">Message sent successfully! I'll get back to you soon.</p>
+            )}
+
+            <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2 font-[family-name:var(--font-vt323)] text-xl tracking-wider disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+                {status === 'loading' ? (
+                    <>Sending...</>
+                ) : (
+                    <><Send size={18} /> Send Message</>
+                )}
+            </button>
+        </form>
     );
 }
